@@ -1,0 +1,6 @@
+typing_extensions
+python-dotenv
+lark
+tinydb
+openai
+requests
