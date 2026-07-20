@@ -150,10 +150,12 @@ class GDBType:
     @classmethod
     def basic(cls, typename: str) -> 'GDBType':
         if typename not in cls.__type_lookup_cache:
+            gdbtype = None
             try:
                 gdbtype = gdb.lookup_type(typename)
             except Exception as e:
-                raise fuck_exc(AssertionError, f'GDBType.basic({typename}) failed: ' + str(e))
+                return
+                # raise fuck_exc(AssertionError, f'GDBType.basic({typename}) failed: ' + str(e))
             cls.__type_lookup_cache[typename] = GDBType(gdbtype)
         return cls.__type_lookup_cache[typename]
 
@@ -170,17 +172,30 @@ class GDBType:
         for size in [8, 16, 32, 64]:
             for sign in ['s', 'u']:
                 _sign = 'u' if sign == 'u' else ''
-                try:
-                    gdbtype = gdb.lookup_type(f'{_sign}int{size}_t')
-                except:
+                aliases = [f'{_sign}int{size}_t', f'{sign}{size}']
+                gdbtype = None
+                for alias in aliases:
                     try:
-                        gdbtype = gdb.lookup_type(f'{sign}{size}')
-                    except Exception as e:
-                        raise fuck_exc(AssertionError, f'GDBType.preload_basic({size=}) failed: ' + str(e))
+                        gdbtype = gdb.lookup_type(alias)
+                        break
+                    except Exception:
+                        continue
+                if gdbtype is None:
+                    continue
                 gtype = GDBType(gdbtype)
-                cls.__type_lookup_cache[f'{_sign}int{size}_t'] = gtype
-                cls.__type_lookup_cache[f'{sign}{size}'] = gtype
-        #
+                cls.__type_lookup_cache[aliases[0]] = gtype
+                cls.__type_lookup_cache[aliases[1]] = gtype
+
+#                try:
+#                    gdbtype = gdb.lookup_type(f'{_sign}int{size}_t')
+#                except:
+#                    try:
+#                        gdbtype = gdb.lookup_type(f'{sign}{size}')
+#                    except Exception as e:
+#                        raise fuck_exc(AssertionError, f'GDBType.preload_basic({size=}) failed: ' + str(e))
+#                gtype = GDBType(gdbtype)
+#                cls.__type_lookup_cache[f'{_sign}int{size}_t'] = gtype
+#                cls.__type_lookup_cache[f'{sign}{size}'] = gtype
         for typename in ['uintptr_t']:
             cls.basic(typename)
 
