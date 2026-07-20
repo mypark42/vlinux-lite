@@ -1,0 +1,112 @@
+// ViewQL DSL grammar.
+
+// import general modules
+
+%import common.CNAME
+%import common.DIGIT
+%import common.HEXDIGIT
+%import common.ESCAPED_STRING
+
+%import common.WS
+%ignore WS
+
+// %import .visualinux.dsl.grammar.cexpr (EQUALITY, RELATIONAL, POSTFIX_DOT, POSTFIX_ARROW)
+%import .cexpr (EQUALITY, RELATIONAL, POSTFIX_DOT, POSTFIX_ARROW, LBRACK_SQR, RBRACK_SQR)
+
+// entry
+
+viewql: instruction*
+instruction: select | update | comment
+comment: "//" /.+/
+
+// select stmt
+
+select: object_set "=" "SELECT" selector "FROM" scope ["AS" identifier] ["WHERE" condition]
+
+selector: normal_expression | CONTAINER_TYPE | ANY_EXPR
+scope: set_expression | ANY_EXPR
+
+CONTAINER_TYPE: LBRACK_SQR CNAME RBRACK_SQR
+ANY_EXPR: "*"
+
+// update stmt
+
+update: "UPDATE" set_expression "WITH" attr_name ":" attr_value
+
+attr_name: CNAME
+attr_value: CNAME
+
+// common primitives
+
+object_set: CNAME
+identifier: CNAME
+literal: INTEGER | NULL_CONST | BOOL_CONST | ESCAPED_STRING
+
+INTEGER: DIGIT+
+       | HEXDIGIT_PREFIX HEXDIGIT+
+HEXDIGIT_PREFIX: "0x"
+
+NULL_CONST: "NULL"
+BOOL_CONST: "true" | "false"
+
+// set expr
+
+set_expression: set_sub
+
+set_sub: set_cup
+       | set_cup SET_OP_SUB set_sub
+
+set_cup: set_cap
+       | set_cap SET_OP_CUP set_cup
+
+set_cap: set_uni
+       | set_uni SET_OP_CAP set_cap
+
+set_uni: object_set
+       | "(" set_expression ")"
+       | set_fn "(" object_set ")"
+
+set_fn: SET_FN_REACHABLE
+
+SET_OP_CAP: "^"
+SET_OP_CUP: "|"
+SET_OP_SUB: "\\"
+
+SET_FN_REACHABLE: "REACHABLE"
+
+// condition expr
+
+condition: condition_or
+
+condition_or: condition_and
+            | condition_and COND_OP_OR condition_or
+
+condition_and: condition_uni
+             | condition_uni COND_OP_AND condition_and
+
+condition_uni: filter
+             | "(" condition ")"
+
+COND_OP_AND: "AND"
+COND_OP_OR:  "OR"
+
+filter: expression
+      | expression comp_op literal
+      | expression IN_SET_OP expression
+
+expression: normal_expression | object_keys
+
+comp_op: EQUALITY | RELATIONAL
+IN_SET_OP: "IN"
+
+// normal expr
+
+normal_expression: identifier (forward_op identifier)*
+
+object_keys: object_key_literal
+           | object_key_literal "," object_keys
+
+object_key_literal: OBJECT_ADDR ":" CNAME
+OBJECT_ADDR: /0x[0-9a-fA-F]+/
+
+forward_op: POSTFIX_DOT | POSTFIX_ARROW

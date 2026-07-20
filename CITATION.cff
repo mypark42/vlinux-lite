@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use this repository, please cite both this repository and the referenced works below."
+
+authors:
+  - family-names: "park"
+    given-names: "myeonghyeon"
+title: "vlinux-lite"
+repository-code: "https://github.com/mypark42/vlinux-lite"
+
+references:
+  - type: software
+    title: "Visualinux"
+    authors:
+      - names: "Visualinux contributors"
+    repository-code: "https://github.com/icsnju/visualinux"
+  - type: conference-paper
+    title: "Understanding the Linux Kernel, Visually"
+    authors:
+      - family-names: "Liu"
+        given-names: "Hanzhi"
+      - family-names: "Jiang"
+        given-names: "Yanyan"
+      - family-names: "Xu"
+        given-names: "Chang"
+    collection-title: "Proceedings of the Twentieth European Conference on Computer Systems"
+    year: 2025
+    doi: 10.1145/3689031.3696095
+    pages: "1044-1060"
+    publisher:
+      name: "Association for Computing Machinery"

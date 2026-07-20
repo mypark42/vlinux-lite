@@ -1,0 +1,64 @@
+@import "@fontsource/inconsolata/400";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    font-family: Inconsolata, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+}
+
+#root {
+    height: 99.9vh;
+    overflow: hidden;
+}
+
+.react-flow__pane {
+    cursor: move !important;
+}
+
+/* .react-flow__node {
+    cursor: move !important;
+    border: 2px solid rgb(26, 25, 43) !important;
+    border-radius: 6px !important;
+} */
+.box-node, .container-node {
+    cursor: default !important;
+    border-width: 3px !important;
+    border-radius: 6px !important;
+    font-size: 18.5px !important;
+}
+.text-base, .text-sm {
+    font-size: 18.5px !important;
+}
+.box-node:hover, .container-node:hover {
+    box-shadow: 0 1px 4px 1px rgba(0, 0, 0, 0.15) !important;
+}
+.box-node:focus, .container-node:focus {
+    box-shadow: 0 0 0 0.5px rgb(26, 25, 43) !important;
+}
+.react-flow__node.selected > .box-node,
+.react-flow__node.selected > .container-node {
+    border: 3.5px solid rgb(245, 125, 189) !important;
+    box-shadow: 0 0 0 1px rgb(26, 25, 43) !important;
+    border-radius: 6px !important;
+    outline: none;
+}
+
+.react-flow__node.draggable {
+    cursor: move !important;
+}
+.react-flow__node.draggable.dragging {
+    cursor: move !important;
+}
+
+.react-flow__node-container {
+    border-color: rgb(100, 100, 100) !important;
+    border-style: dashed !important;
+}
+
+.react-flow__edges {
+    z-index: 1100 !important;
+}

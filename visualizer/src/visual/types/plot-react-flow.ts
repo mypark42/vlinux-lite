@@ -1,0 +1,61 @@
+import { TextMember, LinkMember, ContainerMember } from "@app/visual/types/plot-model";
+import { type Node, type Edge } from "@xyflow/react";
+
+export type ReactFlowPlot = {
+    key: string
+    timestamp: number
+    views: {[name: string]: ReactFlowGraph}
+}
+
+export type ReactFlowGraph = {
+    nodes: ReactFlowNode[]
+    edges: Edge[]
+}
+export type ReactFlowNode = BoxNode | ContainerNode;
+export type BoxNode = Node<BoxNodeData, 'box'>;
+export type ContainerNode = Node<ContainerNodeData, 'container'>;
+
+type NodeMetadata = {
+    notifier?: (id: string, rootId: string, type: string) => void,
+    isContainerMember?: boolean,
+    parentCollapsed?: boolean,
+}
+type BoxNodeMetadata = {
+    collapsed?: boolean,
+    trimmed?:   boolean,
+} & NodeMetadata
+type ContainerNodeMetadata = {
+    collapsed?: boolean,
+    trimmed?:   boolean,
+    direction?: string,
+} & NodeMetadata
+
+type BoxNodeMember =
+    | TextMember
+    | (LinkMember & {
+        isTargetTrimmed?: boolean
+    })
+    | ({
+        class:  'box'
+        object: string
+        data:   BoxNodeData
+    })
+
+export type BoxNodeData = {
+    key:     string
+    type:    string
+    addr:    string
+    label:   string
+    members: {[label: string]: BoxNodeMember}
+    parent:  string | null
+    shadow?: boolean
+} & BoxNodeMetadata
+
+export type ContainerNodeData = {
+    key:     string
+    type:    string
+    addr:    string
+    label:   string
+    members: ContainerMember[]
+    parent:  string | null
+} & ContainerNodeMetadata

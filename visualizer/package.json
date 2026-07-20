@@ -1,0 +1,44 @@
+{
+  "name": "visualizer",
+  "version": "0.2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.mjs",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@dagrejs/dagre": "^1.1.4",
+    "@fontsource/inconsolata": "^5.1.0",
+    "@xyflow/react": "^12.3.0",
+    "express": "^4.21.2",
+    "html-to-image": "^1.11.11",
+    "lokijs": "^1.5.12",
+    "mitt": "^3.0.1",
+    "nearley": "^2.20.1",
+    "openai": "^4.76.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-rnd": "^10.4.13",
+    "reactjs-popup": "^2.0.6",
+    "split-pane-react": "^0.1.3",
+    "tailwindcss": "^3.4.16"
+  },
+  "devDependencies": {
+    "@types/lokijs": "^1.5.14",
+    "@types/nearley": "^2.11.5",
+    "@types/react": "^18.2.53",
+    "@types/react-dom": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^6.20.0",
+    "@typescript-eslint/parser": "^6.20.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "dotenv": "^16.4.7",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.12"
+  },
+  "license": "Apache-2.0"
+}

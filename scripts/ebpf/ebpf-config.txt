@@ -1,0 +1,11 @@
+# eBPF Probe Configuration for trace_alloc.c
+# Format: pin_path section_name probe_type probe_target
+# Lines starting with # are comments
+
+# Memory allocation probes
+/sys/fs/bpf/vdiff_kmalloc     vdiff_monitor        kretprobe __kmalloc
+/sys/fs/bpf/vdiff_cache_alloc vdiff_monitor_2      kretprobe kmem_cache_alloc
+
+# Memory deallocation probes (uncomment when kfree probes are enabled in trace_alloc.c)
+# /sys/fs/bpf/vdiff_kfree       kprobe_kfree               kprobe    kfree
+# /sys/fs/bpf/vdiff_cache_free  kprobe_cache_free          kprobe    kmem_cache_free
