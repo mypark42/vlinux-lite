@@ -12,6 +12,19 @@ import argparse
 import re
 from lark import Lark, ParseTree, Token, Tree
 
+
+class GDBArgumentParser(argparse.ArgumentParser):
+    def error(self, message):
+        # sys.exit()을 막고 GDB 예외를 던져 세션 종료를 방지합니다.
+        raise gdb.GdbError(f"Error: {message}\n{self.format_usage()}")
+    def exit(self, status=0, message=None):
+        # -h / --help 진입 시 호출되는 sys.exit(0)을 차단
+        if message:
+            gdb.write(message)
+        # GDB가 정상적으로 catch할 수 있는 예외를 던져 함수를 빠져나옵니다.
+        raise gdb.GdbError("")
+
+
 VPLOT_GRAMMAR_PATH = DSL_GRAMMAR_DIR / 'vcmd-plot.lark'
 VPLOT_PROMPT = (PROMPT_DIR / 'vplot.md').read_text()
 VPLOT_FIND_PROMPT      = (PROMPT_DIR / 'vplot-find.md').read_text()
@@ -46,7 +59,7 @@ class VPlotHandler:
 
     @classmethod
     def invoke(cls, arg: str):
-        parser = argparse.ArgumentParser(description="vplot command line interface (example: vplot $foo tsk { pid, comm }).")
+        parser = GDBArgumentParser(description="vplot command line interface (example: vplot $foo tsk { pid, comm }).")
         parser.add_argument('-o', '--output', type=str, help='optional: specify the view name (only used for plotting entries without -f)')
         parser.add_argument('convar',  nargs='?', help='optional: specify a convenient variable to store the snapshot (must start with $)')
         parser.add_argument('entries', nargs='*', help='plot simple entries quickly')
